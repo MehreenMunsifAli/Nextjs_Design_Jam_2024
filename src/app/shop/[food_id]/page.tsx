@@ -21,7 +21,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useParams } from "next/navigation";
-import { fetchShopData } from "@/lib/utils";
+import { fetchProducts } from "@/lib/utils";
 
 interface Food {
     id: number;
@@ -54,44 +54,33 @@ export default function ShopDetails() {
 
     console.log("Food ID: ", food_id);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const query = `*[_type == "food"] {
-                                    id,
-                                    name,
-                                    "imageUrl": image.asset->url,
-                                    description,
-                                    price,
-                                    originalPrice,
-                                    available,
-                                }`;
-                // const allFoodQuery = `*[_type == "food]{"imageUrl":image.asset->url, name, price, originalPrice} `;
-                console.log("Fetching data for ", food_id);
-                const data = await fetchShopData(query);
-                // const allData = await fetchShopData(allFoodQuery);
-                console.log('Data', data);
-                
-                const singleProduct = data.find((item: Food) => item.id == Number(food_id));
-                console.log("Single Food: ", singleProduct);
+    const id = Number(food_id);
 
-                if (!singleProduct){
-                    setError("Product not found");
-                    return;
-                }
-                
-                setFoodData(singleProduct);
-                setAllFood(data);
-                
-            } catch (error) {
-                setError("Error fetching food item data");
-            }  finally {
-                setLoading(false);
-            }
+    const fetchProduct = async (id: number ) => {
+        try {
+          const res = await fetch(`/api/shop/${id}`);
+      
+          if (!res.ok) throw new Error("Failed to fetch product");
+      
+          const data = await res.json();
+          console.log("Fetched product:", data);
+          setError("");
+          setLoading(false);
+          return data;
+        } catch (error) {
+          console.error("Error fetching product:", error);
+          setError("Error Occured while Fetching Product");
+          setLoading(false);
+          return null;
         }
+      };
 
-        if (food_id) fetchData();
+    useEffect(() => {
         
+        if (food_id) fetchProduct(id).then((data) => setFoodData(data));
+
+        fetchProducts('/api/shop').then((data) => setAllFood(data));
+
     }, [food_id]);
 
     if (loading) return <div>Loading...</div>;
@@ -129,118 +118,6 @@ export default function ShopDetails() {
 
         }
     ]
-
-    // const products = [
-    //     {
-    //         id: 1,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_ZuIDLSz3XLg.svg",
-    //         AltText: "Food Plate and Fork",
-    //         DishName: "Fresh Lime",
-    //         CurrentPrice: 38.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 2,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_LgTyii0GDKQ.svg",
-    //         AltText: "Muffin",
-    //         DishName: "Chocolate Muffin",
-    //         CurrentPrice: 38.00,
-    //     },
-    //     {
-    //         id: 3,
-    //         ImagePath: "/assets/images/shop/shop_card/Mask_Group.svg",
-    //         AltText: "Burger",
-    //         DishName: "Burger",
-    //         CurrentPrice: 21.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 4,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_9G_oJBKwi1c.svg",
-    //         AltText: "Country Burger",
-    //         DishName: "Country Burger",
-    //         CurrentPrice: 45.00,
-    //     },
-    //     {
-    //         id: 5,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_akwA-GPF710.svg",
-    //         AltText: "Drink",
-    //         DishName: "Drink",
-    //         CurrentPrice: 23.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 6,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_Oxb84ENcFfU.svg",
-    //         AltText: "Pizza",
-    //         DishName: "Pizza",
-    //         CurrentPrice: 43.00,
-    //     },
-    //     {
-    //         id: 7,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_TBFUDMkNqWg.svg",
-    //         AltText: "Cheese Butter",
-    //         DishName: "Cheese Butter",
-    //         CurrentPrice: 10.00,
-    //     },
-    //     {
-    //         id: 8,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_U0BzBTt-5so.svg",
-    //         AltText: "Sandwiches",
-    //         DishName: "Sandwiches",
-    //         CurrentPrice: 25.00,
-    //     },
-    //     {
-    //         id: 9,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_CwMdIMCB0LU.svg",
-    //         AltText: "Chicken Chup",
-    //         DishName: "Chicken Chup",
-    //         CurrentPrice: 12.00,
-    //     },
-    //     {
-    //         id: 10,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_9G_oJBKwi1c.svg",
-    //         AltText: "Country Burger",
-    //         DishName: "Country Burger",
-    //         CurrentPrice: 45.00,
-    //     },
-    //     {
-    //         id: 11,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_akwA-GPF710.svg",
-    //         AltText: "Drink",
-    //         DishName: "Drink",
-    //         CurrentPrice: 23.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 12,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_Oxb84ENcFfU.svg",
-    //         AltText: "Pizza",
-    //         DishName: "Pizza",
-    //         CurrentPrice: 43.00,
-    //     },
-    //     {
-    //         id: 13,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_TBFUDMkNqWg.svg",
-    //         AltText: "Cheese Butter",
-    //         DishName: "Cheese Butter",
-    //         CurrentPrice: 10.00,
-    //     },
-    //     {
-    //         id: 14,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_U0BzBTt-5so.svg",
-    //         AltText: "Sandwiches",
-    //         DishName: "Sandwiches",
-    //         CurrentPrice: 25.00,
-    //     },
-    //     {
-    //         id: 15,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_CwMdIMCB0LU.svg",
-    //         AltText: "Chicken Chup",
-    //         DishName: "Chicken Chup",
-    //         CurrentPrice: 12.00,
-    //     },  
-    // ]
 
     const handleNext = () => {
         if (currentIndex + itemsPerPage < allFood.length){

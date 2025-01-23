@@ -17,7 +17,7 @@ import {
   } from "@/components/ui/pagination";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { fetchShopData } from "@/lib/utils";
+import { fetchProducts } from "@/lib/utils";
 
 // structure of each menu item
 interface MenuType {
@@ -39,20 +39,14 @@ export default function ShopPage() {
     const itemsPerPage: number = 12;
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const query = `*[_type == "food"]{id, "imageUrl":image.asset->url, name, price, originalPrice, category}`;
-                const data = await fetchShopData(query);
-                console.log("Products Fetched: ", data);
-                setMenu(data);
-            } catch (err) {
-                setError("Failed to load data");
-                throw err;
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
+        fetchProducts('/api/shop').then((data) => {
+            if (data) setMenu(data);
+            setError("");
+            setLoading(false);
+        }).catch(() => {
+            setError("Error Occured while Fetching Products");
+            setLoading(false);
+        })
     }, []);
 
     const handleCategoryChange = (category: string) => {
@@ -152,7 +146,8 @@ export default function ShopPage() {
                     <div>
                         <h3 className="font-bold text-xl lg:text-lg">Category</h3>
                         {/* Checkboxes */}
-                        {Array.from(new Set(menu?.map((food) => food.category))).map((category, idx) => (
+                        { menu && (
+                            Array.from(new Set(menu.map((food) => food.category))).map((category, idx) => (
                             <div key={idx} className="flex items-center space-x-2 my-4">
                                 <Checkbox
                                     id={category}
@@ -164,7 +159,7 @@ export default function ShopPage() {
                                     {category}
                                 </Label>
                             </div>
-                        ))
+                        ))) 
                         }
                     </div>
                 </div>
