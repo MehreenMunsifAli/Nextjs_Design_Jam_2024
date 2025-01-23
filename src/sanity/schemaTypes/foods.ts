@@ -9,6 +9,11 @@ export default {
         title: 'Food Name',
       },
       {
+        name: 'id',
+        type: 'number',
+        title: "ID",
+      },
+      {
         name: 'category',
         type: 'string',
         title: 'Category',

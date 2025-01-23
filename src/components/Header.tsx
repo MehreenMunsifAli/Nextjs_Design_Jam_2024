@@ -13,7 +13,7 @@ export default function Header() {
     return (
         <header className="container mx-auto max-w-screen-lg mt-[45px] bg-black lg:flex flex-col justify-center ">
             <div className="text-center h-[32px] ">
-                <p className="text-[#FF9F0D] text-[24px] font-bold ">Food<span className="text-white">tuck</span></p>
+                <p className="text-[#FF9F0D] text-[24px] font-bold ">Foodie<span className="text-white">Inn</span></p>
             </div>
             <div className="flex lg:flex-row lg:justify-between lg:items-center flex-col items-end text-white">
                 <nav className="flex items-center">

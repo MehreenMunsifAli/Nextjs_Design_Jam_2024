@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Foodtuck",
+  title: "FoodieInn",
   description: "Your Hunger Solution",
 };
 

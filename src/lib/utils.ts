@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export async function fetchShopData() {
+export async function fetchShopData(query: string) {
   try {
-      const query = `*[_type == "food"]{id, "imageUrl":image.asset->url, name, price, originalPrice}`;
+      // const query = `*[_type == "food"]{id, "imageUrl":image.asset->url, name, price, originalPrice}`;
       const food = await client.fetch(query);
       console.log("Food Data Fetched Successfully");
       if (!food.length) throw new Error('No Food Items Found!');
@@ -19,13 +19,9 @@ export async function fetchShopData() {
   }
 }
 
-export async function fetchChefData() {
+export async function fetchChefData(query: string) {
   try {
-      const query = `*[_type == "chef"]{
-                          "imageUrl": image.asset->url, 
-                          name,
-                          position,
-                          }`;      
+      // const query = `*[_type == "chef"]{"imageUrl": image.asset->url, name,position,}`;      
       const chef = await client.fetch(query);
       console.log("Chef Data Fetched Successfully");
       if (!chef.length) throw new Error('No Chef Found!');

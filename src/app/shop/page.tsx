@@ -18,135 +18,32 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchShopData } from "@/lib/utils";
-  
+
+// structure of each menu item
 interface MenuType {
-    id: string;
+    id: number;
     name: string;
     price: number;
     originalPrice?: number;
     imageUrl: string;
+    category: string;
 }
 
 export default function ShopPage() {
-    // const products = [
-    //     {
-    //         id: 1,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_ZuIDLSz3XLg.svg",
-    //         AltText: "Food Plate and Fork",
-    //         DishName: "Fresh Lime",
-    //         CurrentPrice: 38.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 2,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_LgTyii0GDKQ.svg",
-    //         AltText: "Muffin",
-    //         DishName: "Chocolate Muffin",
-    //         CurrentPrice: 38.00,
-    //     },
-    //     {
-    //         id: 3,
-    //         ImagePath: "/assets/images/shop/shop_card/Mask_Group.svg",
-    //         AltText: "Burger",
-    //         DishName: "Burger",
-    //         CurrentPrice: 21.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 4,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_9G_oJBKwi1c.svg",
-    //         AltText: "Country Burger",
-    //         DishName: "Country Burger",
-    //         CurrentPrice: 45.00,
-    //     },
-    //     {
-    //         id: 5,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_akwA-GPF710.svg",
-    //         AltText: "Drink",
-    //         DishName: "Drink",
-    //         CurrentPrice: 23.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 6,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_Oxb84ENcFfU.svg",
-    //         AltText: "Pizza",
-    //         DishName: "Pizza",
-    //         CurrentPrice: 43.00,
-    //     },
-    //     {
-    //         id: 7,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_TBFUDMkNqWg.svg",
-    //         AltText: "Cheese Butter",
-    //         DishName: "Cheese Butter",
-    //         CurrentPrice: 10.00,
-    //     },
-    //     {
-    //         id: 8,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_U0BzBTt-5so.svg",
-    //         AltText: "Sandwiches",
-    //         DishName: "Sandwiches",
-    //         CurrentPrice: 25.00,
-    //     },
-    //     {
-    //         id: 9,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_CwMdIMCB0LU.svg",
-    //         AltText: "Chicken Chup",
-    //         DishName: "Chicken Chup",
-    //         CurrentPrice: 12.00,
-    //     },
-    //     {
-    //         id: 10,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_9G_oJBKwi1c.svg",
-    //         AltText: "Country Burger",
-    //         DishName: "Country Burger",
-    //         CurrentPrice: 45.00,
-    //     },
-    //     {
-    //         id: 11,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_akwA-GPF710.svg",
-    //         AltText: "Drink",
-    //         DishName: "Drink",
-    //         CurrentPrice: 23.00,
-    //         OldPrice: 45.00,
-    //     },
-    //     {
-    //         id: 12,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_Oxb84ENcFfU.svg",
-    //         AltText: "Pizza",
-    //         DishName: "Pizza",
-    //         CurrentPrice: 43.00,
-    //     },
-    //     {
-    //         id: 13,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_TBFUDMkNqWg.svg",
-    //         AltText: "Cheese Butter",
-    //         DishName: "Cheese Butter",
-    //         CurrentPrice: 10.00,
-    //     },
-    //     {
-    //         id: 14,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_U0BzBTt-5so.svg",
-    //         AltText: "Sandwiches",
-    //         DishName: "Sandwiches",
-    //         CurrentPrice: 25.00,
-    //     },
-    //     {
-    //         id: 15,
-    //         ImagePath: "/assets/images/shop/shop_card/unsplash_CwMdIMCB0LU.svg",
-    //         AltText: "Chicken Chup",
-    //         DishName: "Chicken Chup",
-    //         CurrentPrice: 12.00,
-    //     },  
-    // ]
     const [menu, setMenu] = useState<MenuType[] | null>(null);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
+    const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+    const [querySearch, setQuerySearch] = useState<string>('');
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const itemsPerPage: number = 12;
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                const data = await fetchShopData();
+                const query = `*[_type == "food"]{id, "imageUrl":image.asset->url, name, price, originalPrice, category}`;
+                const data = await fetchShopData(query);
+                console.log("Products Fetched: ", data);
                 setMenu(data);
             } catch (err) {
                 setError("Failed to load data");
@@ -158,6 +55,36 @@ export default function ShopPage() {
         loadData();
     }, []);
 
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory((prev) => 
+            prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+        );
+    }
+
+    const filteredMenu = menu
+        ? menu.filter((food) => 
+            (selectedCategory.length === 0 || selectedCategory.includes(food.category)) &&
+            (querySearch === "" || food.name.toLowerCase().includes(querySearch.toLowerCase()))
+        )
+        : [];
+
+    // e.g., menu length 16 / itemsPerPage 12 = 1.3  Math.ceil will round up to 2
+    const totalPages = Math.ceil(filteredMenu.length / itemsPerPage);
+    
+    const paginatedMenu = filteredMenu.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    }
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
@@ -165,16 +92,16 @@ export default function ShopPage() {
         <>
         <Banner Title="Our Shop" Page="Shop" />
         <div className="bg-white">
-            <div className="container max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-12 gap-y-4 md:gap-4 py-16">
+            <div className="container max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-12 md:row-span-6 gap-y-4 md:gap-4 py-16">
                 {/* Food Cards */}
-                <div className="col-span-9 row-span-7 flex flex-wrap md:justify-normal justify-center mt-4 md:mt-0 gap-4">
-                    {menu ? (
-                        menu.map((food, idx) => (
-                        <Link key={idx} href={`/shop/${food.name}`} >
+                <div className="col-span-9 row-auto flex flex-wrap md:justify-normal justify-center mt-4 md:mt-0 gap-4">
+                    {paginatedMenu.length > 0 ? (
+                        paginatedMenu.map((food, idx) => (
+                        <Link key={idx} href={`/shop/${food.id}`} >
                             <ShopCard
                                 ImagePath={food.imageUrl}
                                 AltText={food.name}
-                                ImageHeight={100}
+                                ImageHeight={220}
                                 ImageWidth={244}
                                 DishName={food.name}
                                 CurrentPrice={food.price}
@@ -187,121 +114,58 @@ export default function ShopPage() {
                 </div>
 
                 {/* Pagination */}
+                {totalPages > 1 && (
                 <div className="col-start-1 md:col-span-3 md:col-start-4">
-                    <Pagination className="text-[#FF9F0D] my-8">
+                    <Pagination className="text-[#FF9F0D] my-8 cursor-pointer">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                {currentPage > 1 && <PaginationPrevious onClick={handlePreviousPage} />}
+                                {/* <PaginationPrevious onClick={currentPage > 1 ? handlePreviousPage : undefined} className={currentPage === 1 ? "opacity-50 pointer-events-none" : ""} /> */}
                             </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
+
+                            {Array.from({length: totalPages}, (_, i) => (
+                            <PaginationItem key={i}>
+                                <PaginationLink onClick={() => setCurrentPage(i + 1)} isActive={i+1 === currentPage} className={i+1 === currentPage ? "bg-[#FF9F0D] text-white" : ''} >{ i + 1 }</PaginationLink>
                             </PaginationItem>
+                            ))}
+
                             <PaginationItem>
-                                <PaginationLink href="#" isActive className="bg-[#FF9F0D] text-white">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                {currentPage < totalPages && <PaginationNext onClick={handleNextPage} />}
+                                {/* <PaginationNext onClick={currentPage < totalPages ? handleNextPage : undefined} className={currentPage === totalPages ? "opacity-50 pointer-events-none" : ""}  /> */}
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
 
                 </div>
+                )}
 
                 {/* Search Bar */}
+                <div className="col-start-1 row-start-1 md:col-start-10 md:col-span-3 space-y-4">
                 <div className="col-start-1 row-start-1 md:col-start-10 md:col-span-3 flex justify-center">
                     <div className=" md:w-[80%]">
-                        <SearchBar PlaceholderText="Search Product"  />
+                        <SearchBar PlaceholderText="Search Product" value={querySearch} onChange={(e) => setQuerySearch(e.target.value)} />
                     </div>
                 </div>
 
                 {/* Category Section */}
-                <div className="hidden md:col-start-10 row-start-2 md:col-span-2 md:flex justify-center">
+                <div className="hidden md:flex justify-start ml-6">
                     <div>
                         <h3 className="font-bold text-xl lg:text-lg">Category</h3>
                         {/* Checkboxes */}
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="sandwiches"
-                            />
-                            <Label 
-                                htmlFor="sandwiches"
-                                >
-                                Sandwiches
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="burger"
-                            />
-                            <Label 
-                                htmlFor="burger"
-                                >
-                                Burger
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="chickenchup"
-                            />
-                            <Label 
-                                htmlFor="chickenchup"
-                                >
-                                Chicken Chup
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="drink"
-                            />
-                            <Label 
-                                htmlFor="drink"
-                                >
-                                Drink
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="pizza"
-                            />
-                            <Label 
-                                htmlFor="pizza"
-                                >
-                                Pizza
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="thi"
-                            />
-                            <Label 
-                                htmlFor="thi"
-                                >
-                                Thi
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="nonveg"
-                            />
-                            <Label 
-                                htmlFor="nonveg"
-                                >
-                                Non Veg
-                            </Label>
-                        </div>
-                        <div className="flex items-center space-x-2 my-4">
-                            <Checkbox
-                                id="uncategorized"
-                            />
-                            <Label 
-                                htmlFor="uncategorized"
-                                >
-                                Uncategorized
-                            </Label>
-                        </div>
+                        {Array.from(new Set(menu?.map((food) => food.category))).map((category, idx) => (
+                            <div key={idx} className="flex items-center space-x-2 my-4">
+                                <Checkbox
+                                    id={category}
+                                    onCheckedChange={() => handleCategoryChange(category)}
+                                />
+                                <Label 
+                                    htmlFor={category}
+                                    >
+                                    {category}
+                                </Label>
+                            </div>
+                        ))
+                        }
                     </div>
                 </div>
 
@@ -332,7 +196,7 @@ export default function ShopPage() {
                 </div>
 
                 {/* Latest Products */}
-                <div className="hidden md:col-span-3 md:col-start-10 row-start-5 w-[85%] md:flex justify-center my-1">
+                <div className="hidden md:flex justify-start ml-6">
                     <div>
                         <div className="mb-4">
                             <h2 className="font-bold text-xl lg:text-lg">Latest Products</h2>
@@ -363,6 +227,7 @@ export default function ShopPage() {
                             <p>Tandoori Chicken</p>
                         </div>
                     </div>   
+                </div>
                 </div>
             </div>
         </div>
