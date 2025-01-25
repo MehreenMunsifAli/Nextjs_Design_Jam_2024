@@ -8,12 +8,15 @@ export function cn(...inputs: ClassValue[]) {
 export const fetchProducts = async (api: string) => {
   try {
       const res = await fetch(api);
-      if (!res.ok) throw new Error("Failed to fetch products");
       const data = await res.json();
+
+      if(!res.ok) {
+        throw new Error(data.error || "Failed to load products");
+      }
       console.log("Fetched products: ", data);
-      return data;
-  } catch (error) {
+      return {data};
+  } catch (error: any) {
       console.error("Error fetching products", error);
-      return null;
+      return {error: error.message};
   }
 }

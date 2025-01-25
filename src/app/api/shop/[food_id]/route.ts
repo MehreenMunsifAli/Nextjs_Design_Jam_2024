@@ -1,7 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, {params}: {params: {food_id: string}}) {
+export async function GET(_: Request, {params}: {params: {food_id: string}}) {
     try {
         const {food_id} = params;
         if (!food_id){
@@ -25,7 +25,8 @@ export async function GET(req: Request, {params}: {params: {food_id: string}}) {
         }
 
         return NextResponse.json(product);
-    } catch {
-        return NextResponse.json({error: "Failed to Fetch Product"}, {status: 500});
+    } catch(error) {
+        console.error("Server Error:", error);
+        return NextResponse.json({error: "Server Error. Please try again"}, {status: 500});
     }
 }

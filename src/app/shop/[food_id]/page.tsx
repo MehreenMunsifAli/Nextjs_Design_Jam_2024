@@ -59,32 +59,57 @@ export default function ShopDetails() {
     const fetchProduct = async (id: number ) => {
         try {
           const res = await fetch(`/api/shop/${id}`);
-      
-          if (!res.ok) throw new Error("Failed to fetch product");
-      
           const data = await res.json();
+          if (!res.ok) {
+            if (res.status >= 500) {
+                throw new Error("Server Error. Please try again.");
+            }
+            throw new Error ('Product Not Found');
+          };
+      
+          
           console.log("Fetched product:", data);
-          setError("");
-          setLoading(false);
-          return data;
-        } catch (error) {
+          return {data};
+        } catch (error: any) {
           console.error("Error fetching product:", error);
-          setError("Error Occured while Fetching Product");
-          setLoading(false);
-          return null;
+          return {error: error.message}
         }
       };
 
     useEffect(() => {
         
-        if (food_id) fetchProduct(id).then((data) => setFoodData(data));
+        if (food_id) fetchProduct(id).then((res) => {
+            if (res.error){
+                setError(res.error);
+                setLoading(false);
+                return;
+            }
+            if (res.data){
+                setFoodData(res.data);
+            }
+            setError('');
+            setLoading(false);
+        });
 
-        fetchProducts('/api/shop').then((data) => setAllFood(data));
+        fetchProducts('/api/shop').then((res) => {
+            if(res.error) {
+                setError(res.error);
+                setLoading(false);
+                return;
+            }
+
+            if (res.data) {
+                setAllFood(res.data);
+            }
+
+            setError('');
+            setLoading(false)
+        });
 
     }, [food_id]);
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    // if (error) return <div>{error}</div>;
     
     const socialIcons = [
         {
@@ -136,8 +161,9 @@ export default function ShopDetails() {
         <>
             <Banner Title="Shop Details" Page="Shop details" />
             <div className=" bg-white">
+            {foodData ? (
                 <div className="container max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-12 gap-y-4 md:gap-4 py-16 text-[#333333]">
-
+                
                     {/* Images Section for Mobile */}
                     <div className="md:hidden flex justify-center">
                         <Carousel className="w-full max-w-xs">
@@ -167,7 +193,7 @@ export default function ShopDetails() {
                     </div>
                     {/* Images Section */}
                     <div className="hidden md:block col-start-1 col-span-1 row-span-7 row-start-1 space-y-3">
-                        {thumbnails.map((thumb, idx) => (
+                        {foodData && thumbnails.map((thumb, idx) => (
                             <div
                                 key={idx}
                                 onClick={() => setActiveImage(thumb)}
@@ -188,15 +214,17 @@ export default function ShopDetails() {
                     </div>
 
                     {/* Active Image */}
+                    {foodData &&
                     <div className="hidden md:block col-start-2 col-span-5 row-span-7 ml-6">
-                        {foodData && <Image
+                         <Image
                             src={foodData.imageUrl}
                             alt="Food Image"
                             width={100}
                             height={100}
                             className="object-cover rounded-md w-full h-full"
-                        />}
+                        />
                     </div>
+                    }
 
                     {/* Product Namex Description, and Price Section */}
                     {/* In stock row */}
@@ -367,6 +395,8 @@ export default function ShopDetails() {
                     </div>
 
                 </div>
+            ) : (<div className="flex justify-center items-center h-screen text-4xl"><p className=" ">{error}</p></div>)
+            }
             </div>
         </>
     )

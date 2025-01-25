@@ -39,13 +39,18 @@ export default function ShopPage() {
     const itemsPerPage: number = 12;
 
     useEffect(() => {
-        fetchProducts('/api/shop').then((data) => {
-            if (data) setMenu(data);
-            setError("");
-            setLoading(false);
-        }).catch(() => {
-            setError("Error Occured while Fetching Products");
-            setLoading(false);
+        fetchProducts('/api/shop').then((res) => {
+            if (res.error) {
+                setError(res.error);
+                return;
+            }
+
+            if (res.data) {
+                setMenu(res.data);
+            }
+
+            setError('');
+            setLoading(false)
         })
     }, []);
 
@@ -80,7 +85,7 @@ export default function ShopPage() {
     }
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    // if (error) return <div>{error}</div>;
 
     return(
         <>
@@ -89,7 +94,10 @@ export default function ShopPage() {
             <div className="container max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-12 md:row-span-6 gap-y-4 md:gap-4 py-16">
                 {/* Food Cards */}
                 <div className="col-span-9 row-auto flex flex-wrap md:justify-normal justify-center mt-4 md:mt-0 gap-4">
-                    {paginatedMenu.length > 0 ? (
+                {error && (
+                        <p className="mx-auto mt-8">{error}</p>
+                )}
+                    {paginatedMenu && (
                         paginatedMenu.map((food, idx) => (
                         <Link key={idx} href={`/shop/${food.id}`} >
                             <ShopCard
@@ -102,9 +110,8 @@ export default function ShopPage() {
                                 OldPrice={food.originalPrice}
                                 /> 
                             </Link>  
-                    ))) : (
-                        <p>Loading...</p>
-                    )}
+                    )))    
+                    }
                 </div>
 
                 {/* Pagination */}
