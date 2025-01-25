@@ -19,11 +19,6 @@ export default function OurChefPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const query = `*[_type == "chef"]{
-                                    "imageUrl": image.asset->url, 
-                                    name,
-                                    position,
-                                    }`;
                 fetchProducts('api/ourchef').then((res) => {
                     if (res.error) {
                         setError(res.error);
@@ -35,7 +30,6 @@ export default function OurChefPage() {
                     setError('');
                     setLoading(false);
                 });
-                // setChefData(data);
             } catch (err) {
                 setError("Failed to load data");
                 throw err;
