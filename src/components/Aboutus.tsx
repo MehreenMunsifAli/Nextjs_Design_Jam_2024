@@ -21,7 +21,7 @@ export default function Aboutus() {
                     <FaCheck className="inline mr-2" />
                     <span> Lacus nisi, et ac dapibus sit eu velit in consequat.</span>
                 </div>
-                <div className="mb-4 text-wrap">
+                <div className="mb-4">
                     <FaCheck className="inline mr-2" />
                     <span>  Quisque diam pellentesque bibendum non dui volutpat fringilla </span>
                 </div>

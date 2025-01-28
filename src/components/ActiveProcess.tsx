@@ -7,13 +7,13 @@ const greatVibes = Great_Vibes({ subsets: ['latin'], weight: ["400","400"] });
 export default function ActiveProcess() {
 
     return (
-        <div className="container max-w-screen-[1280px] mx-auto my-16 py-12 text-white relative bg-white">
+        <div className="container max-w-screen-lg mx-auto my-16 py-12 text-white relative bg-white">
             <div
                 className="absolute inset-0 bg-cover bg-no-repeat " 
                 style={{backgroundImage: "url('/assets/images/activeprocess/unsplash_E6DsqnZbZ4o.svg')"}}>
             </div>
             {/* Content */}
-            <div className="flex justify-center ">
+            <div className="flex justify-center pr-4">
             <div className="relative container max-w-screen-lg flex flex-col items-center lg:items-end z-50">
                 <h1 className={`${greatVibes.className} text-[#FF9F0D] italic text-h5 lg:text-h4`}>Restaurant Active Process</h1>
                 <h2 className="text-h5 lg:text-h3 font-bold leading-tight mt-2 whitespace-nowrap text-center lg:text-right">
