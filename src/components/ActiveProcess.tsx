@@ -16,7 +16,7 @@ export default function ActiveProcess() {
             <div className="flex justify-center ">
             <div className="relative container max-w-screen-lg flex flex-col items-center lg:items-end z-50">
                 <h1 className={`${greatVibes.className} text-[#FF9F0D] italic text-h5 lg:text-h4`}>Restaurant Active Process</h1>
-                <h2 className="text-h4 lg:text-h3 font-bold leading-tight mt-2 whitespace-nowrap text-center lg:text-right">
+                <h2 className="text-h5 lg:text-h3 font-bold leading-tight mt-2 whitespace-nowrap text-center lg:text-right">
                         <span className="text-[#FF9F0D]">We </span> Document Every Food
                          <br /> Bean Process untile it is saved
                 </h2>

@@ -15,13 +15,13 @@ export default function Aboutus() {
                         <span className="text-[#FF9F0D]">We </span> Create the best <br /> foody product
                 </h2>
                 <p className="w-2/3 lg:w-[526px] text-[16px] my-8 text-center lg:text-left">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque diam pellentesque bibendum non dui volutpat fringilla bibendum. Urna, elit augue urna, vitae feugiat pretium donec id elementum. Ultrices mattis sed vitae mus risus. Lacus nisi, et ac dapibus sit eu velit in consequat.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque diam pellentesque bibendum non dui volutpat fringilla bibendum. Urna, elit augue urna, vitae feugiat pretium donec id elementum. Ultrices mattis sed vitae mus risus. Lacus nisi, et ac dapibus sit eu velit in consequat.
                 </p>
                 <div className="mb-4">
                     <FaCheck className="inline mr-2" />
                     <span> Lacus nisi, et ac dapibus sit eu velit in consequat.</span>
                 </div>
-                <div className="mb-4">
+                <div className="mb-4 text-wrap">
                     <FaCheck className="inline mr-2" />
                     <span>  Quisque diam pellentesque bibendum non dui volutpat fringilla </span>
                 </div>

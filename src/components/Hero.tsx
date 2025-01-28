@@ -44,13 +44,13 @@ export default function Hero() {
                 </div>
                 {/* Right Content */}
                 <div className="  flex justify-center lg:justify-end">
-                    <div className="relative mt-4 w-[400px] h-[300px] lg:w-[600px] lg:h-[450px] lg:-right-24">
+                    <div className="relative mt-4 w-[360px] md:w-[400px] h-[300px] lg:w-[600px] lg:h-[450px] lg:-right-24">
                     <Image
                         alt="Food Plate"
                         src={"/assets/images/hero/hero.svg"}
                         fill
                         priority={true}
-                        className="object-cover"
+                        className="object-contain"
                     />
                     </div>
                 </div>

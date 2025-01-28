@@ -138,11 +138,11 @@ export default function Footer() {
         </div>
          {/* End */}
          <div className="bg-[#FF9F0D]">
-        <footer className="container max-w-screen-lg mx-auto py-4  flex flex-col lg:flex-row lg:justify-between justify-around items-center text-white">
+        <footer className="container max-w-screen-lg mx-auto py-4 flex flex-col lg:flex-row lg:justify-between justify-around items-center gap-2 text-white">
             <p className="text-[16px]">
                 Copyright &copy; 2022 by Ayeman. All Rights Reserved.  
             </p>
-            <div className="w-[240px] flex gap-2">
+            <div className="w-[180px] flex justify-between gap-2">
                 <SocialIcon Icon={FaFacebookF} Url="https://facebook.com" />
                 <SocialIcon Icon={FaTwitter} Url="https://twitter.com" />
                 <SocialIcon Icon={FaInstagram} Url="https://instagram.com" />
