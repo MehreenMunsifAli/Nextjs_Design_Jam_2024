@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "./ui/input";
 import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
@@ -8,8 +9,11 @@ import {
     SheetTrigger,
   } from "@/components/ui/sheet";
   import { Menu } from "lucide-react";
+import { useCart } from "@/app/contexts/CartContext";
 
 export default function Header() {
+    const {totalItems} = useCart();
+
     return (
         <header className="container mx-auto max-w-screen-lg mt-[45px] bg-black lg:flex flex-col justify-center ">
             <div className="text-center h-[32px] ">
@@ -99,9 +103,18 @@ export default function Header() {
                         <Input placeholder="Search..." className="bg-black text-white text-[16px] w-[310px] h-[40px] pl-[20px] pr-[12px] rounded-[27px] border-2 border-[#FF9F0D]  " />
                         <FiSearch className="absolute right-5 bottom-1/2 transform translate-y-1/2 text-2xl text-white" />
                     </div>
-                    <Link href={"/shopping_cart"}>
-                        <SlHandbag className="text-2xl ml-4" />
-                    </Link>
+                    <div className="relative">
+                        <Link href={"/shopping_cart"}>
+                            <SlHandbag className="text-2xl ml-4" />
+                            {totalItems >= 1 && (
+                            <span
+                                className="absolute bottom-3 left-full bg-red-500 text-white rounded-full text-[9px] px-1.5 hover:scale-110"    
+                            >
+                                {totalItems}
+                            </span>
+                        )}
+                        </Link>
+                    </div>
                 </div>
                 
             </div>

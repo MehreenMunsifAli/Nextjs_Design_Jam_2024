@@ -1,3 +1,4 @@
+"use client";
 import Banner from "@/components/Banner";
 import LatestProductsCard from "@/components/LatestProductsCard";
 import { Button } from "@/components/ui/button";
@@ -5,11 +6,14 @@ import { Input } from "@/components/ui/input";
 import { RxCross2 } from "react-icons/rx";
 import { PiCheckSquareOffsetBold } from "react-icons/pi";
 import Link from "next/link";
+import { useCart } from "../contexts/CartContext";
 
 
 
 export default function ShoppingCartPage() {
+    const { cart, removeFromCart, updateQuantity } = useCart();
 
+    const cartSubtotal = cart.reduce((subTotal, item) => subTotal + item.totalAmount, 0)
     const products = [
         {
             imagePath: '/assets/images/shopping_cart/unsplash_uBigm8w_MpA.svg',
@@ -43,35 +47,55 @@ export default function ShoppingCartPage() {
             <Banner Title="Shopping Cart" Page="Shopping cart" />
             <div className="bg-white">
                 <div className="container max-w-screen-lg mx-auto py-16 gap-4">
-                    <table className="w-full table-auto mb-16">
-                        <thead className=""> 
-                            <tr className=" font-bold text-left">
-                                <th className=" ">Product</th>
-                                <th className="">Price</th>
-                                <th className="">Quantity</th>
-                                <th className="">Total</th>
-                                <th className="">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody className=" mt-16">
-                            {products.map((prod, idx) => (
-                                <tr key={idx} className=" border-b-2">
-                                    <td className="  py-8" ><LatestProductsCard ImagePath={prod.imagePath} ImageText="Food 2" DishName={prod.dishName} ImageWidth={70} ImageHeight={70} /> </td>
-                                    <td className=""> ${prod.price} </td>
-                                    <td className="">
-                                        <div className="flex items-center text-xs">
-                                            <p className=" rounded-full rounded-r-none border-[1px] px-2 py-1">-</p>
-                                            <p className="font-bold px-2 py-1 border-[1px] border-r-0 border-l-0">1</p>
-                                            <p className="rounded-full rounded-l-none border-[1px] px-2 py-1">+</p>
-                                        </div>    
-                                     </td>
-                                    <td className=""> ${prod.price}</td>
-                                    <td className="px-4 "><RxCross2/></td>
+                    {cart.length === 0 ? (
+                        <p className="text-center text-xl">Your cart is empty</p>
+                    ) : (
+                        <table className="w-full table-auto mb-16">
+                            <thead className=""> 
+                                <tr className=" font-bold text-left">
+                                    <th className=" ">Product</th>
+                                    <th className="">Price</th>
+                                    <th className="">Quantity</th>
+                                    <th className="">Total</th>
+                                    <th className="">Remove</th>
                                 </tr>
-                                ))}
-                        </tbody>
-                    </table>
-
+                            </thead>
+                            <tbody className=" mt-16">
+                            {cart.map((prod, idx) => (
+                                    <tr key={idx} className=" border-b-2">
+                                        <td className="  py-8" ><LatestProductsCard ImagePath={prod.imageUrl} ImageText="Food 2" DishName={prod.name} ImageWidth={70} ImageHeight={70} /> </td>
+                                        <td className=""> ${prod.price} </td>
+                                        <td>
+                                            <div className="flex items-center text-xs">
+                                                <button className="rounded-full rounded-r-none border-black border-[1px] px-2 py-1 bg-transparent text-black" onClick={() => updateQuantity(prod.id, -1)}>-</button>
+                                                <p className="font-bold px-2 py-1 border-[1px] border-r-0 border-l-0">{prod.quantity}</p>
+                                                <button className="rounded-full rounded-l-none border-black border-[1px] px-2 py-1" onClick={() => updateQuantity(prod.id, 1)}>+</button>
+                                            </div>    
+                                        </td>
+                                        <td className=""> ${prod.totalAmount}</td>
+                                        <td className="px-4 ">
+                                            <RxCross2 className="cursor-pointer" onClick={() => removeFromCart(prod.id)}/>
+                                        </td>
+                                    </tr>
+                                    ))}
+                                {/* {products.map((prod, idx) => (
+                                    <tr key={idx} className=" border-b-2">
+                                        <td className="  py-8" ><LatestProductsCard ImagePath={prod.imagePath} ImageText="Food 2" DishName={prod.dishName} ImageWidth={70} ImageHeight={70} /> </td>
+                                        <td className=""> ${prod.price} </td>
+                                        <td className="">
+                                            <div className="flex items-center text-xs">
+                                                <p className=" rounded-full rounded-r-none border-[1px] px-2 py-1">-</p>
+                                                <p className="font-bold px-2 py-1 border-[1px] border-r-0 border-l-0">1</p>
+                                                <p className="rounded-full rounded-l-none border-[1px] px-2 py-1">+</p>
+                                            </div>    
+                                        </td>
+                                        <td className=""> ${prod.price}</td>
+                                        <td className="px-4 "><RxCross2/></td>
+                                    </tr>
+                                    ))} */}
+                            </tbody>
+                        </table>
+                    )}
                     {/* Coupon Code & Total Bill */}
                     <div className="my-14 grid grid-cols-1 md:grid-cols-12 gap-4">
                         {/* Coupon Code */}
@@ -97,19 +121,19 @@ export default function ShoppingCartPage() {
                                     <h2 className="text-[18px]">
                                         Cart Subtotal
                                     </h2>
-                                    <p>$120</p>
+                                    <p>{cartSubtotal}</p>
                                 </div>
                                 
                                 <div className="flex justify-between pt-2 pb-4 px-4">
                                     <p>Shipping Charges</p>
-                                    <p>$00.00</p>
+                                    {cart.length > 0 ? (<p>$05.00</p>) : (<p>$00.00</p>)}
                                 </div>
 
                                 <div className="font-bold flex justify-between border-t-2 border-[#BDBDBD] text-[#333333] pt-3 px-4">
                                     <h2 className="text-[18px]">
                                         Total
                                     </h2>
-                                    <p>$205</p>
+                                    {cartSubtotal > 0 ? (<p>${cartSubtotal + 5}</p>) : (<p>$00.00</p>)}
                                 </div>
                             </div>
                         </div>

@@ -61,6 +61,11 @@ export default {
         title: 'Available',
         description: 'Availability status of the food item',
       },
+      {
+        name: 'quantity',
+        type: 'number',
+        title: 'Quantity',
+      }
     ],
   };
   

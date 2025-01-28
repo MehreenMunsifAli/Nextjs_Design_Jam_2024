@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/carousel"
 import { useParams } from "next/navigation";
 import { fetchProducts } from "@/lib/utils";
+import { useCart } from "@/app/contexts/CartContext";
 
 interface Food {
     id: number;
@@ -41,6 +42,8 @@ export default function ShopDetails() {
     const [activeImage, setActiveImage] = useState<string>("/assets/images/shop/shop_detail/Food_1.svg");
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const itemsPerPage: number = 4;
+    const [quantity, setQuantity] = useState<number>(1);
+    const {addToCart, updateQuantity} = useCart();
 
     const thumbnails = [
         "/assets/images/shop/shop_detail/Food_1.svg",
@@ -51,10 +54,7 @@ export default function ShopDetails() {
     ];
 
     const {food_id} = useParams();
-
-    console.log("Food ID: ", food_id);
-
-    const id = Number(food_id);
+    const id = Number(food_id); // parse to pass in api to match type of sanity item id
 
     const fetchProduct = async (id: number ) => {
         try {
@@ -144,18 +144,26 @@ export default function ShopDetails() {
         }
     ]
 
+    // similar products handle next
     const handleNext = () => {
         if (currentIndex + itemsPerPage < allFood.length){
             setCurrentIndex((prev) => prev + 1);
         }
     }
-
+    // similar products handle previous
     const handlePrev = () => {
         if (currentIndex > 0) {
             setCurrentIndex((prev) => prev - 1);
         }
     }
 
+    // quantity change to add to cart
+    const handleQuantityChange = (change: number) => {
+        if (!foodData || foodData.id === undefined) return;
+        const newQuantity = Math.max(1, quantity + change); // Prevent negative values
+        setQuantity(newQuantity);
+        updateQuantity(foodData?.id, newQuantity); // Update in global state (if needed)
+    };
 
     return (
         <>
@@ -270,13 +278,15 @@ export default function ShopDetails() {
                     <div className="md:col-start-7 md:col-span-6 md:row-start-6 px-4 gap-4 text-lg ">
                         <div className="flex items-center gap-4 border-b-2 pb-6">
                             <div className="flex items-center">
-                                <p className="border-black border-[1px] px-4 py-1">-</p>
-                                <p className="font-bold px-4 py-1 border-[1px] border-black border-r-0 border-l-0">1</p>
-                                <p className="border-black border-[1px] px-4 py-1">+</p>
+                                <button className="border-black border-[1px] px-4 py-1 bg-transparent text-black" onClick={() => handleQuantityChange(-1)}>-</button>
+                                <p className="font-bold px-4 py-1 border-[1px] border-black border-r-0 border-l-0">{quantity}</p>
+                                <button className="border-black border-[1px] px-4 py-1" onClick={() => handleQuantityChange(1)}>+</button>
                             </div>
                             <div className="relative">
                                 <SlHandbag className="absolute top-[30%] text-white left-3 text-xs" />
-                                <Button type="button" className="bg-[#FF9F0D] rounded-none py-[18px] px-8">Add to Cart</Button>
+                                <Button type="button" className="bg-[#FF9F0D] focus:bg-[#ffb03a] rounded-none py-[18px] px-8 "
+                                onClick={() => addToCart(foodData, quantity)}
+                                >Add to Cart</Button>
                             </div>
                         </div>
                     </div>
