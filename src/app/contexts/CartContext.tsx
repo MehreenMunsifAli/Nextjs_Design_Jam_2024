@@ -62,6 +62,7 @@ export const CartProvider = ({children}: {children: ReactNode}) => {
 
     const removeFromCart = (productId: number) => {
         setCart((prev) => prev.filter((item) => item.id !== productId));
+        console.log(`Product removed from cart`);
     }
 
     const updateQuantity = (productId: number, amount: number) => {
