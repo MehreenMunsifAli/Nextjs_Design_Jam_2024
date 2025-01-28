@@ -24,6 +24,7 @@ q-commerce-restaurant/
 
 ## 🚀 Features
 - 📜 **Dynamic Menu** – Browse restaurant menu items
+- 🛒 **Cart Functionality** – Add, update, and remove items from the cart
 - 🌐 **API Integration** – Fetch dynamic restaurant data from **Sanity CMS**
 - 📱 **Responsive Design** – Mobile-friendly UI
 - ⚡ **Optimized Performance** – Fast-loading pages
@@ -34,6 +35,7 @@ q-commerce-restaurant/
 - **Tailwind CSS** – Utility-first styling
 - **Shadcn UI** – Modern UI components
 - **Sanity CMS** – Backend for dynamic content
+- **React Context API** – State management for cart functionality  
 
 ## 🛠 Installation & Setup
 ### 1️⃣ Clone the repository:
@@ -68,4 +70,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `/api/shop/{id}`| Fetch individual product detail |
 
 ## 📢 Contributing
+
+### **Changes & Additions:**
+✔ Added **cart functionalities** under a new section 📌  
+✔ Mentioned **React Context API** for cart management  
+✔ Included **cart-related functions** for clarity 
+
 Contributions are welcome! Feel free to **fork, submit PRs, or open issues**.
