@@ -66,7 +66,7 @@ export default function Header() {
                             <li>
                                 <Link href={"/"}>Home</Link>
                             </li>
-                            <li><Link href={"/"}>Menu</Link></li>
+                            <li><Link href={"/menu"}>Menu</Link></li>
                             <li className="relative group">
                                 <button className=" rounded focus:outline-none">
                                     About
@@ -90,7 +90,8 @@ export default function Header() {
                                     </li>
                                 </ul>
                             </li>
-                            <li><Link href={"/"}>Shop</Link></li>
+                            <li><Link href={"/shop"}>Shop</Link></li>
+                            <li><Link href={"/ourchef"}>Our Chef</Link></li>
                             <li><Link href={"/faq"}>FAQ</Link></li>
                             <li><Link href={"/signin"}>Sign In</Link></li>
                             <li><Link href={"/signup"}>Sign Up</Link></li>

@@ -29,7 +29,7 @@ export default function Hero() {
                 {/* -- Social Icons End Here -- */}
 
                 {/* Left Content */}
-                <div className=" mt-0 text-center lg:text-left ">
+                <div className="mt-0 text-center lg:text-left ">
                     <h1 className={`${greatVibes.className} text-[#FF9F0D] italic text-h5 lg:text-h4`}>It&apos;s Quick & Amusing!</h1>
                     <h1 className="lg:max-w-[472px] text-h4 lg:text-h3 font-bold leading-tight mt-2 whitespace-nowrap text-center lg:text-left">
                         <span className="text-[#FF9F0D] ">Th</span>e Art of Speed <br /> Food Quality
@@ -43,7 +43,7 @@ export default function Hero() {
                     </button>
                 </div>
                 {/* Right Content */}
-                <div className="  flex justify-center lg:justify-end">
+                <div className="flex justify-center lg:justify-end">
                     <div className="relative mt-4 w-[360px] md:w-[400px] h-[300px] lg:w-[600px] lg:h-[450px] lg:-right-24">
                     <Image
                         alt="Food Plate"

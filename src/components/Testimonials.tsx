@@ -13,7 +13,7 @@ export default function Testimonials() {
             {/* Top Content */}
             <div className="lg:text-left text-center">
                 <h1 className={`${greatVibes.className} text-[#FF9F0D] italic text-h5 lg:text-h4`}>Testimonials</h1>
-                <h2 className="text-h4 lg:text-h3 font-bold leading-tight mt-2 whitespace-nowrap">
+                <h2 className="text-h4 lg:text-h3 font-bold leading-tight mt-2">
                         What our clients are saying
                 </h2>
             </div>

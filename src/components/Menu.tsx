@@ -44,7 +44,7 @@ export default function Menu() {
             {/* Images Content */}
             <div className="flex flex-col lg:flex-row justify-between items-center gap-y-6 lg:items-stretch flex-wrap lg:flex-nowrap ">
                 <div className="">
-                    <div className="relative w-[390px] h-[320px] ">
+                    <div className="relative w-[370px] h-[320px] ">
                         <Image
                             className="object-cover"
                             src={"/assets/images/menu/unsplash_INjdgkCwHp0.svg"}
